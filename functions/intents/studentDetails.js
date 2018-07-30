@@ -1,3 +1,7 @@
+let mapper = {
+	personName : 'name'
+}
+
 module.exports = {
 
 	studentDetailsProcess : function (db, parameters, sendResponse){
@@ -8,7 +12,15 @@ module.exports = {
 		//defining details to be fetched
 		let personDetails = [parameters.personDetails];
 		
-		if(personDetails[0] == 'contact details'){
+
+		if( !parameters.personDetails ){
+
+			sendResponse( 'please request for valid contact details!' )
+			return;
+		}
+
+
+		if(personDetails[0] == 'contact details' || personDetails[0] == 'details'){
 			personDetails[0] = 'mobile';
 			personDetails[1] = 'email';
 		}
@@ -23,7 +35,7 @@ module.exports = {
 			//if unqiue identifier is available 
 			students = students.where( uniqueStudentIdentifier, '==', parameters[uniqueStudentIdentifier] );
 			console.log('students', students);
-		}
+		} 
 		else{
 			//no unique identifier
 			let exceptions = ['personDetails', 'PRN', 'rollNo', 'student'];
@@ -39,7 +51,29 @@ module.exports = {
 			for(let key in filterFields){
 				//checks if its own property filterFields
 				if( !filterFields.hasOwnProperty(key) ) continue;
-				students = students.where( key , '==', filterFields[key] );
+				
+				let value = filterFields[ key ]
+				console.log( 'raw value', value )
+
+				if( key == 'personName' ){
+					
+					key = []
+
+					//if only single name entity is provided, 
+					//convert it into array as following code will assume its an array
+					if( ! Array.isArray( value ) ) value = [ value ]
+					
+					for( let name of value )
+						key.push( 'name.' + name.toLowerCase() )
+					
+					console.log( key )
+					value = true
+				}
+
+				for( let keyVal of key ){
+					students = students.where( keyVal , '==', value );
+					console.log( keyVal )
+				}
 			}
 		}
 
@@ -93,3 +127,5 @@ function isObjectEmpty(object){
 	console.log('returning true');
 	return true;
 }
+
+ 

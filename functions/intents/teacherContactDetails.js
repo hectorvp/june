@@ -1,3 +1,5 @@
+
+
 module.exports = {
 
     teacherContactDetailsProcess: function (db, parameters, sendResponse) {
@@ -6,7 +8,12 @@ module.exports = {
 	  	let personDetails = [parameters.personDetails];
 		let response = 'Here are the requested teacher details\n';
 
-		if(personDetails[0] == 'contact details'){
+		if( !personDetails ){
+			sendResponse('requested for invalid details!!!');
+			return;
+		}
+
+		if(personDetails[0] == 'contact details' || personDetails[0] == 'details'){
 			personDetails[0] = 'mobile';
 			personDetails[1] = 'email';
 		}
@@ -21,7 +28,7 @@ module.exports = {
 		let teacherRef = db.collection('people').where('type','==','teacher');
 
 		personName.forEach( (name) => {
-			let tempName = 'personName.' + name
+			let tempName = 'name.' + name;
 			teacherRef = teacherRef.where( tempName, '==', true);
 		})
 
