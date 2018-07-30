@@ -25,4 +25,4 @@ https://dialogflow.com/docs/how-tos/getting-started-fulfillment#moving_fulfillme
 
 Database used: cloud firestore		https://firebase.google.com/docs/firestore
 
-For now, the code works for phone no of Harsh and Pranav
+
